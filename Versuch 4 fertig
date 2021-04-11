@@ -2,8 +2,8 @@
 #include "hal\hal_lcd.h"
 
 int Page = 0;
-int Pos[8] = {0,0,0,0,0,0,0,0};
 int PagePos=0;
+int Pos[8] = {0,0,0,0,0,0,0,0};
 char* Texte[]={"Einstellungen","Telefonbuch","Anrufe","Klingelton", "Lautstaerke",
 					 "Seppi", "Karl Heinz","Carlo", "24.03.21", "Tutut","BeepBeep",
 					 "0 Prozent","50 Prozent","100 Prozent","0162-123235","0163-143235",
@@ -17,7 +17,7 @@ int Select[][4]= { {0,1,2,-1}, //Hauptmenue 0
 				   {14,-1}, //Seppi 6
 				   {15,16,17,-1} //Karl-Heinz 7
 				 };
-int groesse[8] =  {3, 2, 2, 2, 2, 3, 1, 3};
+
 char js;
 
 
@@ -37,7 +37,7 @@ void PrintMenue(char JS)
 
     if(JS=='u')
         {
-        	if(PagePos < (groesse[Page]-1))
+        	if(Select[Page][PagePos+1] > -1)
         	{
         		PagePos ++;
         	}
@@ -78,7 +78,7 @@ void PrintMenue(char JS)
                 	PagePos = Pos[Page];
                 }
 
-    for(int z=0; z < groesse[Page]; z++)
+    for(int z=0; Select[Page][z] > -1; z++)
     {
     	if(z==PagePos)
     	{
@@ -136,28 +136,32 @@ void PORT2_VECTOR_ISR(void)
    	   }
 
    if((P2IFG == 0b00000100)) //rechts
-      {
+       {
 	   js= 'r';
    	   P2IFG &= ~0b00000100;
-      }
+       }
 
    if((P2IFG == 0b00001000)) //mitte
-            {
-              js= 'm';
-              P2IFG &= ~0b00001000;
-            }
+       {
+	   js= 'm';
+       P2IFG &= ~0b00001000;
+       halLcdPrintLine("Die Mitte hat",6,1);
+       halLcdPrintLine("keine Funktion",7,1);
+       goto stop;
+       }
 
    if((P2IFG == 0b00010000)) //oben
-         {
-	   	   js= 'o';
-      	   P2IFG &= ~0b00010000;
-         }
+       {
+	   js= 'o';
+       P2IFG &= ~0b00010000;
+       }
 
    if((P2IFG == 0b00100000)) //unten
-         {
-           js= 'u';
-           P2IFG &= ~0b00100000;
-         }
+       {
+       js= 'u';
+       P2IFG &= ~0b00100000;
+       }
 
-   PrintMenue(js);
+   	   PrintMenue(js);
+   	   stop:;
 }
