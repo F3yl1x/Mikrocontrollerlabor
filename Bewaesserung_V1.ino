@@ -1,7 +1,7 @@
 //Konstanten
-const int FeuchtWert1 = 550;
-const int FeuchtWert2 = 550;
-const int FeuchtWert3 = 550;
+const int FeuchtWert1 = 700;
+const int FeuchtWert2 = 700;
+const int FeuchtWert3 = 700;
 const int Bewaesserungszeit = 5000;
 const int Checktime = 1000;
 
